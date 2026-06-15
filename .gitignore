@@ -13,3 +13,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# mysql connector
+jdbc-problems/mysql-connector-j-9.6.0/
