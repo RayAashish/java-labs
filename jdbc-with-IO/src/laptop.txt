@@ -1,0 +1,4 @@
+Macbook-Air 8 256
+Asus-Vivobook 16 1024
+Lenovo_IdeaPad 16 1024
+Asus-ROG 64 2048
