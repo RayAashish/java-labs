@@ -5,12 +5,16 @@ import java.net.Socket;
 
 public class Client {
     public static void main(String[] args)  throws Exception{
+
         Socket socket = new Socket("localhost", 8080);
-        BufferedReader reader  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-        writer.println("Hello from client");
+
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        out.println("Hello from client!");
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(socket.getInputStream()));
+        String response = in.readLine();
 
         socket.close();
-        reader.close();
     }
 }
