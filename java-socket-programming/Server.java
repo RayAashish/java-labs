@@ -6,19 +6,20 @@ import java.net.Socket;
 
 class Server{
     public static void main(String[] args) throws Exception {
-        ServerSocket serverSocket = new ServerSocket(8090);
-        Socket clientServer = new Socket();
+        ServerSocket serverSocket = new ServerSocket(8080);
+        Socket clientSocket = serverSocket.accept();    // blocks until client connects
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(clientServer.getInputStream()));
-        String message = reader.readLine();
+        // Read from client
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(clientSocket.getInputStream()));
+        String msg = in.readLine();
 
-        PrintWriter out = new PrintWriter(clientServer.getOutputStream(), true);
+        // Write to client
+        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+        out.println("Hello from server!");
 
-        out.print("Hello from server");
-
+        clientSocket.close();
         serverSocket.close();
-        clientServer.close();
-        reader.close();
 
     }
 }
