@@ -6,6 +6,8 @@
 out/
 target/
 build/
+bin/
+*.class
 
 # OS files
 .DS_Store

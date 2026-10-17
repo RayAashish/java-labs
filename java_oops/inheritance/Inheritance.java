@@ -6,6 +6,11 @@ import java.util.List;
 public class Inheritance {
     public static void main(String[] args) {
         EducationLoan eduLoan = new EducationLoan();
+        eduLoan.setName("Aashish");
+        eduLoan.setAccountNo(10023456789L);
+        eduLoan.setDob(Date.valueOf("2000-01-01"));
+        eduLoan.setRequiredDocuments(List.of("ID Proof", "Admission Letter"));
+        System.out.println("Created education loan for: " + eduLoan.getName());
     }
 }
 
@@ -13,6 +18,10 @@ class Account{
     private String name;
     private Long accountNo;
     private Date dob;
+
+    public Account() {
+    }
+
     public Account(String name, Long accountNo, Date dob) {
         this.name = name;
         this.accountNo = accountNo;
@@ -40,13 +49,16 @@ class Account{
 
 class EducationLoan extends Account{
 
+    private List<String> requiredDocuments;
+
+    public EducationLoan() {
+        super();
+    }
+
     public EducationLoan(String name, Long accountNo, Date dob, List<String> requiredDocuments) {
         super(name, accountNo, dob);
         this.requiredDocuments = requiredDocuments;
     }
-
-
-    private List<String> requiredDocuments;
 
     public List<String> getRequiredDocuments() {
         return requiredDocuments;
