@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Spring STOMP Chat</title>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body style="font-family:sans-serif;padding:20px;">
+  <h2>Spring WebSocket STOMP Test Client</h2>
+  <div>
+    <input id="user" placeholder="Your name" value="raysi" style="padding:6px;width:120px;" />
+    <input id="msg" placeholder="Type a message..." style="padding:6px;width:280px;" />
+    <button onclick="send()" style="padding:6px 12px;cursor:pointer;">Send</button>
+  </div>
+  <ul id="chat" style="margin-top:15px;padding:15px;border:1px solid #ccc;height:220px;overflow-y:auto;list-style:none;"></ul>
+
+  <script>
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+      stompClient.subscribe('/topic/public', function (frame) {
+        const payload = JSON.parse(frame.body);
+        const item = document.createElement('li');
+        item.textContent = `[${payload.sender}]: ${payload.content}`;
+        document.getElementById('chat').appendChild(item);
+      });
+    });
+
+    function send() {
+      const sender = document.getElementById('user').value || 'Anonymous';
+      const content = document.getElementById('msg').value;
+      if (!content.trim()) return;
+      stompClient.send('/app/chat', {}, JSON.stringify({ sender, content }));
+      document.getElementById('msg').value = '';
+    }
+  </script>
+</body>
+</html>
