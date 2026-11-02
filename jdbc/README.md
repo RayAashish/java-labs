@@ -62,7 +62,7 @@ Ensure MySQL is running locally on port `3306`. Initialize the schema and seed d
 ```bash
 mysql -u root -p < jdbc/schema.sql
 ```
-*(Default password configured is `Raysi@2002` or can be overridden via `DB_PASSWORD` env variable)*.
+*(Default password configured is `root` or can be overridden via `DB_PASSWORD` env variable)*.
 
 ### 2. Compiling the Entire Project
 From the repository root (`java-labs`):

@@ -15,7 +15,7 @@ public final class DatabaseConfig {
     private static final String DEFAULT_PORT = "3306";
     private static final String DEFAULT_DB = "jdbclab";
     private static final String DEFAULT_USER = "root";
-    private static final String DEFAULT_PASS = "Raysi@2002";
+    private static final String DEFAULT_PASS = "root";
 
     public static String getHost() {
         return getEnvOrProp("DB_HOST", DEFAULT_HOST);
