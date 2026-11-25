@@ -84,7 +84,36 @@ RUN_CLASSES=(
   patterns.behavioral.ChainOfResponsibilityPatternDemo
   patterns.behavioral.CommandPatternDemo
   patterns.behavioral.StatePatternDemo
-  lts.java25.ModernJdk25ErgonomicsAndFeaturesDemo
+  lts.java08.lambdas.LambdaAndFunctionalInterfacesDemo
+  lts.java08.streams.StreamCreationAndLifecycleDemo
+  lts.java08.streams.StreamIntermediateAndTerminalOpsDemo
+  lts.java08.streams.StreamCollectorsAndPrimitivesDemo
+  lts.java08.streams.ParallelStreamsPitfallsDemo
+  lts.java08.optional.OptionalCompleteGuideDemo
+  lts.java08.datetime.DateAndTimeJsr310Demo
+  lts.java08.interfaces.DefaultAndStaticMethodsDemo
+  lts.java08.async.CompletableFuturePipelinesDemo
+  lts.java08.runtime.Java8Base64ConcurrencyAndAnnotationsDemo
+  lts.java11.varinference.VarTypeInferenceAndLambdaDemo
+  lts.java11.httpclient.StandardHttpClientLocalDemo
+  lts.java11.stringsfiles.StringFilesAndCollectionsDemo
+  lts.java11.modular.StreamOptionalAndPrivateInterfaceDemo
+  lts.java11.runtime.RuntimeApisAndNestmatesDemo
+  lts.java17.records.RecordsDeepDiveDemo
+  lts.java17.sealedtypes.SealedClassesHierarchyDemo
+  lts.java17.flow.SwitchExprAndInstanceofPatternDemo
+  lts.java17.text.TextBlocksAndStreamAdditionsDemo
+  lts.java17.security.HelpfulNpePrngAndFilterDemo
+  lts.java21.loom.VirtualThreadsDeepDiveDemo
+  lts.java21.sequenced.SequencedCollectionsDeepDiveDemo
+  lts.java21.switchpatterns.SwitchPatternMatchingDeepDiveDemo
+  lts.java21.recordpatterns.NestedRecordPatternsDemo
+  lts.java21.runtime.KemUtf8AndCharsetDemo
+  lts.java25.ffm.FfmMemoryAndDowncallDemo
+  lts.java25.unnamed.UnnamedVariablesAndPatternsDemo
+  lts.java25.gatherers.StreamGatherersMasteryDemo
+  lts.java25.concurrency.ScopedValuesDeepDiveDemo
+  lts.java25.ergonomics.FlexibleConstructorBodiesDemo
   tooling.modules.JpmsAndServiceLoaderDemo
   tooling.diagnostics.RuntimeDiagnosticsDemo
 )
@@ -95,5 +124,6 @@ done
 
 java -ea -cp "$OUT_DIR" tooling.testing.UnitTestingAndTestDoublesDemo >/dev/null
 java --enable-preview -cp "$OUT_DIR" concurrency.phase5_virtual_threads_project_loom.StructuredTaskScopeShutdownOnFailureDemo >/dev/null
+java --enable-preview -cp "$OUT_DIR" lts.java25.concurrency.StructuredTaskScopeJoinerDemo >/dev/null
 
-echo "ALL_MODULES_VERIFIED_OK (${#RUN_CLASSES[@]} + 2 smoke runs passed)"
+echo "ALL_MODULES_VERIFIED_OK (${#RUN_CLASSES[@]} + 3 smoke runs passed)"

@@ -1,66 +1,39 @@
-# 14. Java LTS Evolution (Java 8 -> 11 -> 17 -> 21 -> 25) — Interview Questions & Answers
+# 14. Java LTS Evolution (Java 8 -> 11 -> 17 -> 21 -> 25) — Master Interview Hub
+
+> **How to use:** Every individual feature folder across `java-08/` through `java-25/` contains its own dedicated `interview/INTERVIEW_QUESTIONS.md` covering deep feature nuances. Use **this file** for cross-version migration, trade-off comparisons, and full-stack architectural interviews!
 
 ---
 
-## 🟢 Beginner Questions
+## 📚 Per-Feature Interview Question Banks
 
-### Q1. What does LTS mean in Java, and which versions are LTS?
-**Long-Term Support** versions receive years of enterprise security & bug patches. Recent LTS releases: **Java 8 (2014), Java 11 (2018), Java 17 (2021), Java 21 (2023), Java 25 (2025)**.
-
-### Q2. What are Text Blocks (`"""`) introduced in Java 15/17?
-Multi-line string literals delimited by triple quotes `"""`, preserving formatting cleanly for JSON, SQL, and HTML without `\n` or `\"` escaping clutter, while automatically stripping incidental leading indentation.
-
-### Q3. How do Records (`record`) reduce boilerplate in Java 17+?
-`public record Point(int x, int y) {}` automatically generates `private final` fields, a canonical constructor, accessor methods (`x()`, `y()`), `equals()`, `hashCode()`, and `toString()`.
+- **Java 8:** [Lambdas](java-08/01-lambda-expressions-and-functional-interfaces/interview/INTERVIEW_QUESTIONS.md) | [Stream API](java-08/02-stream-api-exhaustive/interview/INTERVIEW_QUESTIONS.md) | [Optional](java-08/03-optional-class/interview/INTERVIEW_QUESTIONS.md) | [Date/Time](java-08/04-date-and-time-api-jsr310/interview/INTERVIEW_QUESTIONS.md) | [Interfaces](java-08/05-interface-default-static-methods/interview/INTERVIEW_QUESTIONS.md) | [CompletableFuture](java-08/06-completablefuture-async-pipelines/interview/INTERVIEW_QUESTIONS.md) | [Metaspace & CHM](java-08/07-nashorn-base64-and-jvm-metaspace/interview/INTERVIEW_QUESTIONS.md)
+- **Java 11:** [`var` Inference](java-11/01-local-variable-var-and-lambda-var/interview/INTERVIEW_QUESTIONS.md) | [HttpClient](java-11/02-standard-httpclient/interview/INTERVIEW_QUESTIONS.md) | [Strings/Files/Factories](java-11/03-string-files-and-collection-factories/interview/INTERVIEW_QUESTIONS.md) | [JPMS/Java9](java-11/04-jpms-modules-and-stream-optional-enhancements/interview/INTERVIEW_QUESTIONS.md) | [JFR/Single-File](java-11/05-single-file-launch-jfr-and-ee-removal/interview/INTERVIEW_QUESTIONS.md)
+- **Java 17:** [Records](java-17/01-records/interview/INTERVIEW_QUESTIONS.md) | [Sealed Classes](java-17/02-sealed-classes-and-interfaces/interview/INTERVIEW_QUESTIONS.md) | [`switch`/`instanceof`](java-17/03-pattern-matching-instanceof-and-switch-expressions/interview/INTERVIEW_QUESTIONS.md) | [Text Blocks & `teeing`](java-17/04-text-blocks-and-string-formatting/interview/INTERVIEW_QUESTIONS.md) | [Encapsulation & Security](java-17/05-strong-encapsulation-prng-and-deserialization-filters/interview/INTERVIEW_QUESTIONS.md)
+- **Java 21:** [Virtual Threads](java-21/01-virtual-threads-project-loom/interview/INTERVIEW_QUESTIONS.md) | [Sequenced Collections](java-21/02-sequenced-collections/interview/INTERVIEW_QUESTIONS.md) | [`switch` Patterns](java-21/03-pattern-matching-for-switch/interview/INTERVIEW_QUESTIONS.md) | [Record Patterns](java-21/04-record-patterns-and-deconstruction/interview/INTERVIEW_QUESTIONS.md) | [Gen-ZGC & KEM](java-21/05-generational-zgc-kem-and-utf8-defaults/interview/INTERVIEW_QUESTIONS.md)
+- **Java 25:** [FFM API](java-25/01-foreign-function-and-memory-api/interview/INTERVIEW_QUESTIONS.md) | [Unnamed `_`](java-25/02-unnamed-variables-and-patterns/interview/INTERVIEW_QUESTIONS.md) | [Stream Gatherers](java-25/03-stream-gatherers/interview/INTERVIEW_QUESTIONS.md) | [`ScopedValue` & Structured Concurrency](java-25/04-scoped-values-and-structured-concurrency/interview/INTERVIEW_QUESTIONS.md) | [Flexible Ctors & Lilliput](java-25/05-flexible-constructors-compact-headers-and-runtime/interview/INTERVIEW_QUESTIONS.md)
 
 ---
 
-## 🟡 Intermediate Questions
+## 🎯 Top Cross-Version Migration & Architecture Questions
 
-### Q4. What are the limitations and rules of Java `record`s?
-1. Implicitly **`final`** and implicitly extend `java.lang.Record` — **cannot extend any other class** (though they CAN implement interfaces!).
-2. Components are **`private final`** (shallowly immutable — defensive copy mutable `List`/`Date` inside a **compact constructor** `public Order { items = List.copyOf(items); }`).
-3. Cannot declare extra non-static instance fields (static fields and methods are allowed).
+### Q1. Walk me through upgrading a legacy Java 8 backend microservice straight to Java 21 or Java 25 LTS. What breaks first, and what wins immediately?
+**What can break:**
+1. Removed Java EE modules (`javax.xml.bind` JAXB, `javax.annotation`) dropped in Java 11 -> add Jakarta Maven deps cleanly.
+2. Strong Encapsulation (`JEP 403`, Java 17): old Lombok/Kryo/Spring proxies reflecting into `java.base` fail with `InaccessibleObjectException` -> upgrade libraries first, add targeted `--add-opens` only if unavoidable.
+3. G1GC is default instead of ParallelGC; deprecated `-XX:+UseConcMarkSweepGC` fails startup cleanly -> switch to G1GC or Generational ZGC!
+**Immediate wins without rewriting business logic:**
+1. ~30–40% String heap savings automatically via **Compact Strings** (Java 9+).
+2. Additional ~10–20% heap savings on Java 25 via **`-XX:+UseCompactObjectHeaders`** (JEP 519).
+3. Virtual Threads (`Executors.newVirtualThreadPerTaskExecutor()` / Spring `spring.threads.virtual.enabled=true`) + JEP 491 unpinned `synchronized` monitors in Java 25!
 
-### Q5. What are Sealed Classes & Interfaces (`sealed ... permits ...`), and how do they pair with `switch`?
-`sealed interface Payment permits Card, Upi, BankTransfer` locks down the exact set of allowed subtypes at compile time. When paired with Java 21 **Pattern Matching for `switch`**, `javac` verifies **exhaustiveness at compile time**, eliminating `default` fallback branches and guaranteeing that adding a new `Crypto` subtype triggers compile errors everywhere it wasn't handled!
+### Q2. Compare `ThreadLocal` (Java 1.2) vs `ScopedValue` (Java 25) vs Reactive Context (WebFlux).
+`ThreadLocal` is mutable, manually cleared (`remove()`), and blows up memory with 500k Virtual Threads. Reactive Context ties your entire codebase to `Mono`/`Flux` operators and breaks stack traces. **`ScopedValue`** keeps normal synchronous Java stack traces, binds immutably for a lexical block, auto-clears cleanly, and shares in $O(1)$ across structured child Virtual Threads!
 
-### Q6. Explain Java 11 `HttpClient` vs legacy `HttpURLConnection`.
-`java.net.http.HttpClient` supports HTTP/1.1 & HTTP/2 (multiplexed streams), native async (`sendAsync` returning `CompletableFuture`), reactive body subscribers/publishers, and native WebSockets without third-party dependencies.
+### Q3. Compare Custom Reductions: Java 8 `Collector` vs Java 25 `Gatherer`.
+`Collector<T, A, R>` customizes **terminal** operations (turning a stream into a `List`, `Map`, or single summary). **`Gatherer<T, A, R>`** customizes **intermediate** operations (`Stream.gather(...)`) enabling custom batching (`windowFixed`), sliding windows, running scans, distinct-by-key, and short-circuiting lazy transformations *inside* the pipeline!
 
-### Q7. How did Java 11 improve `String` and `var`?
-- `String`: `isBlank()`, `lines()`, `strip()`, `stripLeading()`, `stripTrailing()`, `repeat(n)`.
-- `var`: Allowed inside lambda parameters (`(@NonNull var x, var y) -> ...`) so annotations can be placed on inferred parameters.
-- Single-file execution: `java MyScript.java` directly without manual `javac`.
-
----
-
-## 🔴 Senior / Modern Architecture Questions (Java 21–25)
-
-### Q8. Explain Pattern Matching for `instanceof` (Java 16), `switch`, and Record Patterns (Java 21).
-- **`instanceof` (Java 16):** `if (obj instanceof String s && !s.isEmpty())` eliminates redundant casting.
-- **Record Patterns & Guarded `switch` (Java 21):** Deconstruct nested records directly inside `case`:
-  ```java
-  switch (shape) {
-      case Rectangle(Point(int x, int y), int w, int h) when w == h -> ...
-      case Circle(Point center, double r) -> ...
-  }
-  ```
-
-### Q9. Compare **Virtual Threads (Java 21)**, **`ScopedValue` (Java 25)**, and **Structured Concurrency (Java 21–25)**.
-- **Virtual Threads (`JEP 444`):** Lightweight JVM-scheduled threads allowing 100k–1M concurrent blocking I/O operations without reactive/WebFlux callback complexity.
-- **`ScopedValue` (`JEP 506`, finalized Java 25):** Immutable, lexically scoped alternative to `ThreadLocal` with zero thread-pool leak risk and O(1) inheritance in structured subtasks.
-- **Structured Concurrency (`StructuredTaskScope`):** Ties child task lifecycles to a `try-with-resources` block — if one fails, sibling tasks cancel immediately (no orphan threads!). Note: JDK 25 (`JEP 505`) modernized `ShutdownOnFailure`/`ShutdownOnSuccess` to `StructuredTaskScope.open(Joiner...)`.
-
-### Q10. What changed with Virtual Thread Pinning in Java 24/25 (`JEP 491`)?
-In Java 21, blocking I/O inside a `synchronized` block/method **pinned** the virtual thread to its OS carrier thread (blocking it). **JEP 491** (JDK 24/25) lets virtual threads unmount cleanly even while holding intrinsic `synchronized` monitors (leaving only JNI/FFI native frames as pinning cases!).
-
-### Q11. What is the Foreign Function & Memory (FFM) API (`JEP 454`, Java 22+), and what does it replace?
-`Arena`, `MemorySegment`, and `Linker` provide **type-safe, deterministic, bounds-checked off-heap memory** and C library invocation in pure Java — replacing fragile, leak-prone `sun.misc.Unsafe` and slow boilerplate **JNI** C headers!
-
-### Q12. What are Java 24/25 Stream Gatherers (`JEP 485`) and Unnamed Variables `_` (`JEP 456`)?
-- **Unnamed Variables `_`:** Explicitly marks ignored catch exceptions (`catch (NumberFormatException _)`), unused lambda parameters (`(_, val) -> ...`), and unused pattern components (`case Point(int x, _) -> x`).
-- **Stream Gatherers:** Standard extensible intermediate stream ops (`Gatherers.windowFixed(n)`, `windowSliding(n)`, `scan(...)`, `mapConcurrent(...)`).
-
-### Q13. What is Java 24/25 **Compact Object Headers (`JEP 450` / `JEP 519`)**?
-Shrinking the 64-bit HotSpot object header from **12–16 bytes (64-bit Mark Word + 32-bit Klass Word) down to 8 bytes** (`-XX:+UseCompactObjectHeaders`), cutting microservice Heap usage by ~10–20% and reducing GC pauses!
+### Q4. Compare Data-Oriented Programming Evolution: Java 8 POJO -> Java 17 (`record` + `sealed`) -> Java 21 (`switch` + Record Patterns) -> Java 25 (`_`).
+- **Java 8:** Verbose immutable classes + `instanceof` casts / Visitor pattern boilerplate.
+- **Java 17:** Concise Sum + Product ADTs via `sealed interface` + `record`s.
+- **Java 21:** Exhaustive `switch` with `when` guards and deep nested record deconstruction (`case Order(Customer(var id, var tier), _) -> ...`).
+- **Java 25:** Unnamed pattern `_` eliminates dummy ignored variables cleanly across nested patterns, `catch`, lambdas, and `try`-with-resources!

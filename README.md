@@ -93,7 +93,7 @@ Every module contains: **`README.md`** (quick card + run guide), **`notes/`**, *
 | **11** | [**Networking & Sockets**](11-networking-and-sockets/) | Blocking TCP & Multi-threaded Chat, UDP Datagrams, Non-Blocking NIO `Selector` Echo Server, Native Java 11 `HttpClient` WebSockets, Spring STOMP Reference | [Notes](11-networking-and-sockets/notes/) | [Codes](11-networking-and-sockets/codes/) | [Interview Q&A](11-networking-and-sockets/interview/INTERVIEW_QUESTIONS.md) |
 | **12** | [**JDBC & Database Connectivity**](12-jdbc-and-database-connectivity/) | Type 4 Drivers, 10 Real Problems, `PreparedStatement` vs SQL Injection, ACID Transactions & Savepoints, Batching, DAO, Connection Pooling | [Notes](12-jdbc-and-database-connectivity/notes/) | [Codes](12-jdbc-and-database-connectivity/codes/) | [Interview Q&A](12-jdbc-and-database-connectivity/interview/INTERVIEW_QUESTIONS.md) |
 | **13** | [**Design Patterns & SOLID**](13-design-patterns-and-solid/) | Dedicated Bad-vs-Good Labs for each **SOLID** Principle + 16 GoF Patterns (Singleton, Factory, Abstract Factory, Builder, Prototype, Adapter, Decorator, Proxy, Facade, Composite, Strategy, Observer, Template, Chain, Command, State) | [Notes](13-design-patterns-and-solid/notes/) | [Codes](13-design-patterns-and-solid/codes/) | [Interview Q&A](13-design-patterns-and-solid/interview/INTERVIEW_QUESTIONS.md) |
-| **14** | [**Java LTS Evolution (8 → 25)**](14-java-lts-evolution/) | Java 8 Lambdas/Streams → 11 `HttpClient`/`var` → 17 Records/Sealed/Text Blocks → 21 Virtual Threads/Switch Patterns → 25 FFM/Gatherers/`_`/Compact Headers | [Notes](14-java-lts-evolution/notes/) | [Codes](14-java-lts-evolution/codes/) | [Interview Q&A](14-java-lts-evolution/interview/INTERVIEW_QUESTIONS.md) |
+| **14** | [**Java LTS Evolution (8 → 25)**](14-java-lts-evolution/) | **27 Dedicated Per-Feature Folders** across Java 8, 11, 17, 21 & 25 LTS (Streams Exhaustive, `HttpClient`, Records, Sealed ADTs, Virtual Threads, Switch/Record Patterns, FFM, `_`, Gatherers, `ScopedValue`, Flexible Constructors) | [LTS Index](14-java-lts-evolution/) | [Java 8–25](14-java-lts-evolution/) | [Interview Q&A](14-java-lts-evolution/interview/INTERVIEW_QUESTIONS.md) |
 | **15** | [**Testing, Modules & JVM Tooling**](15-testing-modules-and-tooling/) | AAA Unit Testing, Fake/Stub/Spy/Mock, JPMS (`module-info.java`), Maven Lifecycles & Scopes, Diagnostic CLI (`jcmd`, `jstack`, `jmap`, `javap`, `jfr`) | [Notes](15-testing-modules-and-tooling/notes/) | [Codes](15-testing-modules-and-tooling/codes/) | [Interview Q&A](15-testing-modules-and-tooling/interview/INTERVIEW_QUESTIONS.md) |
 
 ---
@@ -120,6 +120,7 @@ java 02-strings-math-and-datetime/codes/math/BigDecimalFinancialPrecisionDemo.ja
 java 06-functional-programming-and-streams/codes/functional/streams/CollectorsCompleteMasteryDemo.java
 java 13-design-patterns-and-solid/codes/patterns/solid/SingleResponsibilityPrincipleDemo.java
 java 13-design-patterns-and-solid/codes/patterns/creational/SingletonPatternDemo.java
+java 14-java-lts-evolution/java-25/03-stream-gatherers/codes/lts/java25/gatherers/StreamGatherersMasteryDemo.java
 ```
 
 ### Compile & Run a Full Module

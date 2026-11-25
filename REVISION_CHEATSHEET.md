@@ -71,7 +71,7 @@
 - **JDK:** Builder (`HttpRequest.newBuilder`), Adapter (`InputStreamReader`), Decorator (`BufferedInputStream`), Strategy (`Comparator`), Chain (`FilterChain`).
 
 ## 14. Java 8 → 25 LTS
-- `8` (Lambdas/Streams/`java.time`) -> `11` (`HttpClient`/lambda `var`) -> `17` (`record`/`sealed`/Text Blocks) -> `21` (Virtual Threads/`switch` patterns/`SequencedCollection`) -> `25` (`FFM Arena`, `_` unnamed vars, `Gatherers`, `ScopedValue`, `JEP 491` monitor unpinning).
+- `8` (Lambdas/Streams/`java.time`) -> `11` (`HttpClient`/lambda `var`) -> `17` (`record`/`sealed`/Text Blocks) -> `21` (Virtual Threads/`switch` patterns/`SequencedCollection`) -> `25` (`FFM Arena`, `_` unnamed vars, `Gatherers`, `ScopedValue`, Flexible Constructors, Lilliput 8B headers, `JEP 491` unpinning).
 
 ## 15. Testing, JPMS & Diagnostics
 - Prefer **Fakes** over heavy mocking. JPMS `exports` exposes public API; `opens` allows deep reflection.
