@@ -1,6 +1,7 @@
-# IntelliJ
+# IntelliJ / IDE
 .idea/
 *.iml
+.vscode/
 
 # Build output
 out/
@@ -13,8 +14,7 @@ bin/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs & dumps
 *.log
-
-# mysql connector
-jdbc-problems/mysql-connector-j-9.6.0/
+*.hprof
+*.jfr
