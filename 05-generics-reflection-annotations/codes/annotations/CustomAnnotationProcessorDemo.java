@@ -4,49 +4,75 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Demonstrates defining a custom @Retention(RUNTIME) annotation
- * and executing an annotation-driven runner using Reflection.
+ * CUSTOM ANNOTATIONS & RUNTIME VALIDATION PROCESSOR
+ *
+ * WHAT IT IS:
+ *   Declarative metadata (`@interface`) inspected via Reflection (similar to Jakarta Bean Validation
+ *   `@NotBlank`, `@Range`, or Spring `@Scheduled`).
+ *
+ * WHY IT MATTERS:
+ *   Separates validation/wiring rules from repetitive boilerplate `if` checks across DTOs.
  */
 public class CustomAnnotationProcessorDemo {
 
     @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    @interface BenchmarkTask {
-        String label() default "unnamed";
-        int repeat() default 1;
+    @Target(ElementType.FIELD)
+    @interface NotBlankField {
+        String message() default "Field must not be blank";
     }
 
-    static class ReportService {
-        @BenchmarkTask(label = "Generate Monthly Invoice", repeat = 2)
-        public void generateInvoices() {
-            System.out.println("   -> Running invoice batch...");
-        }
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.FIELD)
+    @interface IntRange {
+        int min();
+        int max();
+    }
 
-        @BenchmarkTask(label = "Warm Cache")
-        public void warmCache() {
-            System.out.println("   -> Warming Redis keys...");
-        }
+    static class CreateUserRequest {
+        @NotBlankField(message = "Username is required")
+        private final String username;
 
-        public void helperWithoutAnnotation() {
-            System.out.println("   -> Should not be invoked automatically.");
+        @IntRange(min = 18, max = 120)
+        private final int age;
+
+        CreateUserRequest(String username, int age) {
+            this.username = username;
+            this.age = age;
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        System.out.println("=== Custom Annotation Runtime Runner ===");
-        ReportService service = new ReportService();
+    public static List<String> validate(Object target) throws IllegalAccessException {
+        List<String> errors = new ArrayList<>();
+        for (Field field : target.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            Object val = field.get(target);
 
-        for (Method method : ReportService.class.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(BenchmarkTask.class)) {
-                BenchmarkTask task = method.getAnnotation(BenchmarkTask.class);
-                System.out.println("[Runner] Executing '" + task.label() + "' x" + task.repeat());
-                for (int i = 0; i < task.repeat(); i++) {
-                    method.invoke(service);
+            if (field.isAnnotationPresent(NotBlankField.class)) {
+                NotBlankField ann = field.getAnnotation(NotBlankField.class);
+                if (val == null || val.toString().isBlank()) {
+                    errors.add(field.getName() + ": " + ann.message());
+                }
+            }
+            if (field.isAnnotationPresent(IntRange.class) && val instanceof Integer num) {
+                IntRange range = field.getAnnotation(IntRange.class);
+                if (num < range.min() || num > range.max()) {
+                    errors.add(field.getName() + ": " + num + " outside [" + range.min() + ".." + range.max() + "]");
                 }
             }
         }
+        return errors;
+    }
+
+    public static void main(String[] args) throws IllegalAccessException {
+        CreateUserRequest invalid = new CreateUserRequest("   ", 15);
+        CreateUserRequest valid = new CreateUserRequest("aashish_ray", 25);
+
+        System.out.println("Invalid DTO errors: " + validate(invalid));
+        System.out.println("Valid DTO errors:   " + validate(valid));
     }
 }

@@ -1,20 +1,25 @@
 package oops.c06_abstraction;
 
-public class Circle implements Shape{
-    public static final double pi = 3.1415;
-    int radius;
-    public Circle(int radius){
+/**
+ * Concrete Circle implementation of the Shape contract.
+ */
+public class Circle implements Shape {
+    private final double radius;
+
+    public Circle(double radius) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("Radius cannot be negative");
+        }
         this.radius = radius;
     }
-    @Override 
-    public double area(){
-        return 2 * pi * radius * radius;
+
+    @Override
+    public double area() {
+        return Math.PI * radius * radius;
     }
 
     public static void main(String[] args) {
-        Circle circle = new Circle(23);
-        double area = circle.area();
-        System.out.println(area);
+        Shape circle = new Circle(23);
+        System.out.printf("Circle area (r=23): %.2f%n", circle.area());
     }
 }
-

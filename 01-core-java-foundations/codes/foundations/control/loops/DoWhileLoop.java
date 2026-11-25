@@ -1,26 +1,25 @@
 package foundations.control.loops;
 
-import java.util.Scanner;
-
+/**
+ * Demonstrates the exit-controlled 'do-while' loop:
+ * Guarantees the body executes AT LEAST ONCE even if the condition is initially false.
+ */
 public class DoWhileLoop {
-
-    /**
-     * The do while loop is little different from others loop
-     * because doesn't matter why, it will execute atleast once before 
-     * checking the condition.
-     */
-    private static void doWhileLoop(){
-        Scanner sc = new Scanner(System.in);
-        do{
-            System.out.print("Enter 1 to break: ");
-            int n = sc.nextInt();
-            if (n == 1)
-                break;
-            else
-                System.out.println("\nYou're still in the loop");
-        }while(true);
-    }
     public static void main(String[] args) {
-        doWhileLoop();
+        System.out.println("=== 1. Exit-Controlled Guarantee (runs once when false) ===");
+        int attempts = 5;
+        do {
+            System.out.println("Executed body once even though attempts (" + attempts + ") >= 5!");
+            attempts++;
+        } while (attempts < 5);
+
+        System.out.println("\n=== 2. Retry Polling Pattern ===");
+        int[] responses = {503, 503, 200};
+        int idx = 0;
+        int status;
+        do {
+            status = responses[idx++];
+            System.out.println("Attempt #" + idx + " -> HTTP " + status);
+        } while (status != 200 && idx < responses.length);
     }
 }

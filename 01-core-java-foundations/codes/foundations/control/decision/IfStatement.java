@@ -1,17 +1,20 @@
 package foundations.control.decision;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+/**
+ * Demonstrates basic 'if' conditional branching with sample inputs.
+ */
 public class IfStatement {
-    public static void main(String[] args) throws IOException{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter your age : ");
-        int age = Integer.parseInt(reader.readLine());
-        if (age >= 21){
-            System.out.println("You're eligible purchasing hard drinks!");
+    private static void checkEligibility(int age) {
+        System.out.print("Age " + age + " -> ");
+        if (age >= 21) {
+            System.out.println("Eligible (meets >= 21 requirement).");
+            return;
         }
-        reader.close();
+        System.out.println("Not eligible yet.");
+    }
+
+    public static void main(String[] args) {
+        checkEligibility(19);
+        checkEligibility(24);
     }
 }

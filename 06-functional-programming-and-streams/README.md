@@ -1,29 +1,38 @@
-# 06. Functional Programming, Lambdas, Optional & Streams API
+# 06. Functional Programming, `Optional` & Stream API Mastery
 
-> **Why this module exists:** Modern Java (8 -> 25) is deeply functional. Mastering Lambdas, Method References, `Optional`, and `Stream` pipelines (without hitting `orElse` eager-evaluation traps or `ForkJoinPool.commonPool()` starvation) separates clean expressive engineers from bug-prone code.
+> **Complete Java 8 → 25 Reference:** Covers every functional interface in `java.util.function`, all 4 Method Reference forms, `Optional` API & anti-patterns, all 10 Stream creation patterns, **every** intermediate & terminal Stream method, **every** `Collectors` pattern, Primitive Streams, Parallel Stream pitfalls, and Java 24/25 **Stream Gatherers**.
 
 ---
 
 ## ⚡ 2-Minute Rapid Revision Card
 
-- **4 Core Functional Interfaces (`java.util.function`):** `Predicate<T>` (`T -> boolean`), `Function<T,R>` (`T -> R`), `Consumer<T>` (`T -> void`), `Supplier<T>` (`() -> T`).
-- **Lambdas Under the Hood (`invokedynamic`):** Unlike anonymous inner classes (which emit `Outer$1.class` files and allocate per-call instances), lambdas compile to `invokedynamic` + `LambdaMetafactory`, avoiding extra `.class` bloat and caching stateless lambda instances!
-- **Effectively Final Capture:** Lambdas capture local variables by **value** (copied into synthetic args), so local variables must be `final` or effectively final.
-- **`Optional` Golden Rules:** Return `Optional<T>` from methods that may have no result; **NEVER** use `Optional` as a field, method parameter, or inside `List<Optional<T>>`. Prefer `.orElseGet(supplier)` over `.orElse(expensiveCall())`!
-- **Streams Are Lazy & Single-Use:** Intermediate ops (`filter`, `map`, `flatMap`) build a pipeline without executing; only a terminal op (`toList`, `collect`, `reduce`, `count`) triggers traversal. Once consumed, a `Stream` cannot be reused (`IllegalStateException`).
-- **Java 24/25 Stream Gatherers (`JEP 485`):** `stream.gather(Gatherers.windowFixed(3))` enables custom stateful intermediate operations natively!
+- **4 Core Functional Interfaces:** `Predicate<T>` (`T -> boolean`), `Function<T,R>` (`T -> R`), `Consumer<T>` (`T -> void`), `Supplier<T>` (`() -> T`).
+- **Lambdas Under the Hood:** Compile to **`invokedynamic` + `LambdaMetafactory`** (no `Outer$1.class` files; `this` points to outer class!). Local variables captured must be **effectively final**.
+- **`Optional` Golden Rule:** Never use `Optional` as fields or parameters. Prefer `.orElseGet(supplier)` over `.orElse(expensiveCall())`!
+- **Streams Are Lazy & Single-Use:** Intermediate ops (`filter`, `map`, `flatMap`, `mapMulti`, `takeWhile`, `dropWhile`, `sorted`, `distinct`, `gather`) build the conveyor belt lazily; terminal ops (`toList`, `collect`, `reduce`, `count`, `anyMatch`, `findFirst`) execute it once.
+- **`Collectors` Traps:** 2-arg `toMap(k, v)` throws on duplicate keys (pass 3rd merge arg!); `toUnmodifiableList()` rejects `null` whereas `Stream.toList()` allows `null`.
+- **Parallel Streams:** Never mutate shared `ArrayList` or run blocking I/O inside `parallelStream()` (starves JVM-wide `ForkJoinPool.commonPool()`).
 
 ---
 
-## 📂 Contents
+## 📂 Notes & Dedicated Runnable Labs
 
-| File | Focus |
+### Part 1: Lambdas, Functional Interfaces & `Optional`
+| Note | Companion Runnable Labs |
 |---|---|
-| [`notes/01-lambdas-functional-interfaces-and-invokedynamic.md`](notes/01-lambdas-functional-interfaces-and-invokedynamic.md) | `@FunctionalInterface`, Method References, `invokedynamic` vs Anonymous Classes |
-| [`notes/02-optional-mastery-and-antipatterns.md`](notes/02-optional-mastery-and-antipatterns.md) | `Optional` composition (`map`/`flatMap`), `orElse` vs `orElseGet`, Anti-patterns |
-| [`notes/03-streams-collectors-parallel-and-gatherers.md`](notes/03-streams-collectors-parallel-and-gatherers.md) | Lazy pipelines, `Spliterator`, `Collectors`, Parallel Stream traps, Java 25 `Gatherers` |
-| [`codes/`](codes/) | 3 runnable labs: Lambdas/Composition, `Optional` Traps, Streams/Collectors/Gatherers |
-| [`interview/INTERVIEW_QUESTIONS.md`](interview/INTERVIEW_QUESTIONS.md) | 30+ Functional & Stream interview Q&As + real coding queries |
+| [`01-lambdas-and-functional-interfaces-deep-dive.md`](notes/01-lambdas-and-functional-interfaces-deep-dive.md) | [`LambdasAndInvokedynamicDemo.java`](codes/functional/lambdas/LambdasAndInvokedynamicDemo.java)<br>[`FunctionalInterfacesCatalogDemo.java`](codes/functional/lambdas/FunctionalInterfacesCatalogDemo.java)<br>[`MethodReferencesFourFormsDemo.java`](codes/functional/lambdas/MethodReferencesFourFormsDemo.java) |
+| [`02-optional-api-exhaustive-guide.md`](notes/02-optional-api-exhaustive-guide.md) | [`OptionalCompleteApiAndTrapsDemo.java`](codes/functional/optional/OptionalCompleteApiAndTrapsDemo.java) |
+
+### Part 2: Complete Stream API & `Collectors` Mastery
+| Note | Companion Runnable Labs |
+|---|---|
+| [`03-stream-api-architecture-and-creation.md`](notes/03-stream-api-architecture-and-creation.md) | [`StreamCreationAllWaysDemo.java`](codes/functional/streams/StreamCreationAllWaysDemo.java) |
+| [`04-stream-intermediate-operations-mastery.md`](notes/04-stream-intermediate-operations-mastery.md) | [`StreamIntermediateOpsMasteryDemo.java`](codes/functional/streams/StreamIntermediateOpsMasteryDemo.java) |
+| [`05-stream-terminal-operations-and-collectors.md`](notes/05-stream-terminal-operations-and-collectors.md) | [`StreamTerminalAndReduceDemo.java`](codes/functional/streams/StreamTerminalAndReduceDemo.java)<br>[`CollectorsCompleteMasteryDemo.java`](codes/functional/streams/CollectorsCompleteMasteryDemo.java)<br>[`PrimitiveStreamsAndGatherersDemo.java`](codes/functional/streams/PrimitiveStreamsAndGatherersDemo.java) |
+| [`06-parallel-streams-performance-and-gotchas.md`](notes/06-parallel-streams-performance-and-gotchas.md) | [`ParallelStreamsPitfallsAndBenchmarkDemo.java`](codes/functional/streams/ParallelStreamsPitfallsAndBenchmarkDemo.java) |
+
+### Part 3: Interview Preparation
+- 👉 **[`interview/INTERVIEW_QUESTIONS.md`](interview/INTERVIEW_QUESTIONS.md)** — 30+ Functional/Stream Q&As + Top Stream Coding Queries.
 
 ---
 
@@ -31,7 +40,15 @@
 
 ```bash
 javac -d out $(find 06-functional-programming-and-streams/codes -name "*.java")
-java -cp out functional.lambdas.LambdasAndMethodReferencesDemo
-java -cp out functional.optional.OptionalBestPracticesDemo
-java -cp out functional.streams.StreamsCollectorsAndGatherersDemo
+
+java -cp out functional.lambdas.LambdasAndInvokedynamicDemo
+java -cp out functional.lambdas.FunctionalInterfacesCatalogDemo
+java -cp out functional.lambdas.MethodReferencesFourFormsDemo
+java -cp out functional.optional.OptionalCompleteApiAndTrapsDemo
+java -cp out functional.streams.StreamCreationAllWaysDemo
+java -cp out functional.streams.StreamIntermediateOpsMasteryDemo
+java -cp out functional.streams.StreamTerminalAndReduceDemo
+java -cp out functional.streams.CollectorsCompleteMasteryDemo
+java -cp out functional.streams.PrimitiveStreamsAndGatherersDemo
+java -cp out functional.streams.ParallelStreamsPitfallsAndBenchmarkDemo
 ```

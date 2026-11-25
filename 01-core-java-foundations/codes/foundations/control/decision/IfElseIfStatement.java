@@ -1,34 +1,26 @@
 package foundations.control.decision;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+/**
+ * Demonstrates the 'if-else-if' ladder for mutually exclusive range checks.
+ */
 public class IfElseIfStatement {
-
-    
-
-    /**
-     * @param age
-     * Suppose we are making an age category for the participants in our Marathon program
-     * The kids under 13 years of age can't participate in the Marathon
-     */
-    private static void ifElseIfStatement(int age){
-        if (age < 13){
-            System.out.println("You can't participate!");
-        } else if (age >= 13 && age < 18){
-            System.out.println("You comes under Teenager category");
-        } else if (age >= 18 && age < 50){
-            System.out.println("You comes under Adult category");
+    private static void classifyParticipant(int age) {
+        System.out.print("Age " + age + ": ");
+        if (age < 13) {
+            System.out.println("Cannot participate in marathon (< 13).");
+        } else if (age < 18) {
+            System.out.println("Teenager category (13-17).");
+        } else if (age < 50) {
+            System.out.println("Adult category (18-49).");
         } else {
-            System.out.println("You comes under Old category");
+            System.out.println("Senior category (50+).");
         }
     }
-    public static void main(String[] args) throws IOException{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Enter your age: ");
-        int age = Integer.parseInt(reader.readLine());
-        ifElseIfStatement(age);
-        reader.close();
+
+    public static void main(String[] args) {
+        classifyParticipant(10);
+        classifyParticipant(16);
+        classifyParticipant(28);
+        classifyParticipant(55);
     }
 }

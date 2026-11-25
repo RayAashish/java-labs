@@ -1,25 +1,30 @@
 package foundations.variables;
 
-
-
 /**
- * @author Aashish Kumar Ray
- * @date 15th Sep, 2026
- * Variables
- * Variables are the name allocated to a memory
- * It's not mandatory but in java the variables are preferred in camel casing with these condtions:
- * 1. It will always start with alphabet
- * 2. Numbers can also be used but not in the start
- * 3. No special character to be used except "_".
- * Example : name, spec_1, surter28 etc
+ * Demonstrates Java variable declarations, naming rules, scope lifetimes
+ * (local vs instance vs static), and Java 10+ local type inference (var).
  */
 public class Variables {
+
+    private static final String REPO_NAME = "java-labs"; // Static constant in Metaspace
+    private String instanceTag = "Foundation-Module";     // Instance field on Heap
+
     public static void main(String[] args) {
-        int age = 24; // Here the word "age" is a variable used to name a memory allocation where 24 is store
+        // Local variables live on the Thread Stack and MUST be initialized before use
+        int age = 24;
         String name = "Aashish";
-        int s1 = 14; // Numbers also can be used but not in the front of the varaible
-        int s2 = 15;
-        double exact_salary = 27000.78d; //Special character '_' can be used for naming but in java, camel casing is preferred more!
-        String fullName = "Aashish Kumar Ray"; //This is the example of camel casing
+        double exactSalary = 27000.78d;
+        String fullName = "Aashish Kumar Ray";
+
+        // Java 10+ compile-time local type inference ('var')
+        var languageVersion = 25;
+
+        Variables demo = new Variables();
+        System.out.println("=== Variables & Scope Demo ===");
+        System.out.println("Repo (static):     " + REPO_NAME);
+        System.out.println("Tag (instance):    " + demo.instanceTag);
+        System.out.println("Name (local):      " + name + " (" + fullName + ")");
+        System.out.println("Age & Salary:      " + age + ", $" + exactSalary);
+        System.out.println("Inferred via var:  Java " + languageVersion);
     }
 }
